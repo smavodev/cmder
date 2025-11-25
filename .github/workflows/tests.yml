@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - development
     paths-ignore:
       - '**/*.md'
       - '**/*.txt'
@@ -12,6 +13,7 @@ on:
   pull_request:
     branches:
       - master
+      - development
     paths-ignore:
       - '**/*.md'
       - '**/*.txt'
@@ -36,7 +38,7 @@ jobs:
     continue-on-error: false
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v5
     - name: Initialize vendors
       shell: pwsh
       working-directory: scripts
@@ -46,7 +48,7 @@ jobs:
           cmd /c vendor\init.bat /v /d /t
     - name: Testing PowerShell
       run: |
-          PowerShell.exe -ExecutionPolicy Bypass -NoLogo -NoProfile -Command "Invoke-Expression '. ''vendor\profile.ps1'''"
+          PowerShell.exe -ExecutionPolicy Bypass -NoLogo -NoProfile -Command "$env:CMDER_DEBUG='1'; . 'vendor\profile.ps1'"
     - name: Testing Bash
       run: |
           bash vendor/cmder.sh
